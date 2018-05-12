@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="client.mylittledoctor.formation.arlebois.com.mylittledoctor.rapport.RapportActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <Button
+        android:id="@+id/createRapport"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="toRapportCreateActivity"
+        android:text="Create rapport" />
+
+        <Button
+            android:id="@+id/viewRapport"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="toRapportViewActivity"
+            android:text="View rapport" />
+
+        <Button
+            android:id="@+id/editRapport"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="toRapportUpdateActivity"
+            android:text="Edit rapport" />
+
+    </LinearLayout>
+</android.support.design.widget.CoordinatorLayout>
