@@ -27,6 +27,7 @@ import java.util.Map;
 
 import client.mylittledoctor.formation.arlebois.com.mylittledoctor.MainActivity;
 import client.mylittledoctor.formation.arlebois.com.mylittledoctor.R;
+import client.mylittledoctor.formation.arlebois.com.mylittledoctor.technical.MyLittleDoctorActivity;
 import client.mylittledoctor.formation.arlebois.com.mylittledoctor.technical.MyLittleDoctorVolleyError;
 import client.mylittledoctor.formation.arlebois.com.mylittledoctor.technical.RequestSingleton;
 import client.mylittledoctor.formation.arlebois.com.mylittledoctor.utilisateur.EvaluationGesteActivity;
@@ -49,6 +50,7 @@ public class AtelierActivity extends YouTubeBaseActivity //implements YouTubePla
 
     Long utilisateurId;
     Long atelierId;
+    Integer role;
 
     Long etape;
 
@@ -61,9 +63,10 @@ public class AtelierActivity extends YouTubeBaseActivity //implements YouTubePla
         descriptionTopo = findViewById(R.id.descriptionTopo);
 
         Intent intent = getIntent();
-        utilisateurId = intent.getLongExtra(MainActivity.UTILISATEUR_ID, -1);
-        atelierId = intent.getLongExtra(MainActivity.ATELIER_ID, -1);
-        etape = intent.getLongExtra(MainActivity.ETAPE_ID, -1);
+        utilisateurId = intent.getLongExtra(MyLittleDoctorActivity.UTILISATEUR_ID, -1);
+        atelierId = intent.getLongExtra(MyLittleDoctorActivity.ATELIER_ID, -1);
+        etape = intent.getLongExtra(MyLittleDoctorActivity.ETAPE_ID, -1);
+        role = intent.getIntExtra(MyLittleDoctorActivity.ROLE, -1);
 
         youTubeView = findViewById(R.id.videoView);
 
@@ -220,20 +223,24 @@ public class AtelierActivity extends YouTubeBaseActivity //implements YouTubePla
     }
 
     private void loadEtape(Long etape) {
-        Intent intent = new Intent(AtelierActivity.this, AtelierActivity.class);
-        intent.putExtra(MainActivity.UTILISATEUR_ID, utilisateurId);
-        intent.putExtra(MainActivity.ATELIER_ID, atelierId);
-        intent.putExtra(MainActivity.ETAPE_ID, etape);
+        Intent intent = nextStep(AtelierActivity.class);
+        intent.putExtra(MyLittleDoctorActivity.ETAPE_ID, etape);
 
         startActivity(intent);
     }
 
     private void loadNotationActivity() {
-        Intent intent = new Intent(AtelierActivity.this, EvaluationGesteActivity.class);
-        intent.putExtra(MainActivity.UTILISATEUR_ID, utilisateurId);
-        intent.putExtra(MainActivity.ATELIER_ID, atelierId);
+        Intent intent = nextStep(EvaluationGesteActivity.class);
 
         startActivity(intent);
+    }
+
+    private Intent nextStep(Class to) {
+        Intent intent = new Intent(AtelierActivity.this, to);
+        intent.putExtra(MyLittleDoctorActivity.UTILISATEUR_ID, utilisateurId);
+        intent.putExtra(MyLittleDoctorActivity.ATELIER_ID, atelierId);
+        intent.putExtra(MyLittleDoctorActivity.ROLE, role);
+        return intent;
     }
 
 }

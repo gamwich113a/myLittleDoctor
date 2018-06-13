@@ -66,6 +66,31 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".rapport.RapportActivity" />
         </activity>
+        <!-- Formateur -->
+        <activity android:name=".formateur.CentralFormateurActivity"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+        <activity android:name=".formateur.EvalEtudiantFormateurActivity"
+        android:parentActivityName=".formateur.CentralFormateurActivity">
+        <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value=".formateur.CentralFormateurActivity" />
+        </activity>
+        <activity android:name=".formateur.SelectAtelierFormateurActivity"
+            android:parentActivityName=".formateur.CentralFormateurActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".formateur.CentralFormateurActivity" />
+        </activity>
+        <activity android:name=".formateur.UpdateTopoFormateurActivity"
+            android:parentActivityName=".formateur.CentralFormateurActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".formateur.CentralFormateurActivity" />
+        </activity>
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />

@@ -32,13 +32,15 @@ import java.util.Map;
 import client.mylittledoctor.formation.arlebois.com.mylittledoctor.CentralActivity;
 import client.mylittledoctor.formation.arlebois.com.mylittledoctor.MainActivity;
 import client.mylittledoctor.formation.arlebois.com.mylittledoctor.R;
+import client.mylittledoctor.formation.arlebois.com.mylittledoctor.formateur.CentralFormateurActivity;
+import client.mylittledoctor.formation.arlebois.com.mylittledoctor.technical.MyLittleDoctorActivity;
 import client.mylittledoctor.formation.arlebois.com.mylittledoctor.technical.MyLittleDoctorVolleyError;
 import client.mylittledoctor.formation.arlebois.com.mylittledoctor.technical.RequestSingleton;
 import client.mylittledoctor.formation.com.mylittledoctor.entite.Evaluation;
 import client.mylittledoctor.formation.com.mylittledoctor.entite.Geste;
 
 
-public class EvaluationGesteActivity extends AppCompatActivity {
+public class EvaluationGesteActivity extends MyLittleDoctorActivity {
 
     Button sauvegardeEvaluationGeste;
     EditText resultat;
@@ -47,9 +49,6 @@ public class EvaluationGesteActivity extends AppCompatActivity {
     Map<Long, Evaluation> evaluationMap = new HashMap<>();
     TableLayout evaluationGrid;
     ScrollView scrollView;
-    Long utilisateurId;
-    Long atelierId;
-    Integer role;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,9 +57,7 @@ public class EvaluationGesteActivity extends AppCompatActivity {
 
         // Get the Intent that started this activity and extract the string
         Intent intent = getIntent();
-        utilisateurId = intent.getLongExtra(MainActivity.UTILISATEUR_ID, -1);
-        atelierId = intent.getLongExtra(MainActivity.ATELIER_ID, -1);
-        role = intent.getIntExtra(MainActivity.ROLE, -1);
+        getContext(intent);
 
         resultat = findViewById(R.id.resultat);
         evaluationGrid = findViewById(R.id.evaluationGrid);
@@ -87,8 +84,14 @@ public class EvaluationGesteActivity extends AppCompatActivity {
             saveEvaluationByUtilisateur(evaluationMap.get(evalSet.next()));
         }
 
-        unLinkAtelier();
-        nextActivity();
+
+        if (role == 0)  {
+            unLinkAtelier();
+            configNextActivity(this, CentralActivity.class);
+        } else {
+            configNextActivity(this, CentralFormateurActivity.class);
+        }
+
     }
 
     public void findGeste(final Long atelierId) {
@@ -99,7 +102,7 @@ public class EvaluationGesteActivity extends AppCompatActivity {
             request = "/geste/findByAtelierId";
         }
 
-        StringRequest gesteRequest = new StringRequest(Request.Method.POST, MainActivity.url + request, new Response.Listener<String>() {
+        StringRequest gesteRequest = new StringRequest(Request.Method.POST, url + request, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 generateData(response);
@@ -241,11 +244,10 @@ public class EvaluationGesteActivity extends AppCompatActivity {
             }
             eval.setCommentaire(commentaire);
         }
-        System.out.println(evaluationMap);
     }
 
     private void saveEvaluationByUtilisateur(final Evaluation eval) {
-        StringRequest saveRequest = new StringRequest(Request.Method.POST, MainActivity.url + "/evaluation/sauvegardeEvaluationSurGeste", new Response.Listener<String>() {
+        StringRequest saveRequest = new StringRequest(Request.Method.POST, url + "/evaluation/sauvegardeEvaluationSurGeste", new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 System.out.println(response);
@@ -294,15 +296,8 @@ public class EvaluationGesteActivity extends AppCompatActivity {
         return evalutations;
     }
 
-    private void nextActivity() {
-        Intent intent = new Intent(this, CentralActivity.class);
-        intent.putExtra(MainActivity.UTILISATEUR_ID, utilisateurId);
-        intent.putExtra(MainActivity.ATELIER_ID, atelierId);
-        startActivity(intent);
-    }
-
     private void unLinkAtelier() {
-        StringRequest linkToAtelier = new StringRequest(Request.Method.POST, MainActivity.url + "/user/linkToAtelier", new Response.Listener<String>() {
+        StringRequest linkToAtelier = new StringRequest(Request.Method.POST, url + "/user/linkToAtelier", new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                  System.out.println("unLinkAtelier");
@@ -362,10 +357,8 @@ public class EvaluationGesteActivity extends AppCompatActivity {
     private void generateData(String response) {
         listGeste = Arrays.asList(new Gson().fromJson(response, Geste[].class));
         listEvaluation =  createEvaluationList(listGeste);
-        List<String> gesteDescription = new ArrayList<>();
         for (Evaluation evaluation : listEvaluation) {
             evaluationMap.put(evaluation.getId(), evaluation);
-            gesteDescription.add(evaluation.getGeste().getDescription());
         }
         dessinGrille();
     }

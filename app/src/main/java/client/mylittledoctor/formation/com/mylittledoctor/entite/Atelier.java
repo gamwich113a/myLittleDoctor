@@ -20,6 +20,7 @@ public class Atelier {
 
 
     private Utilisateur createur;
+    private Utilisateur formateur;
 
 
     private List<Geste> geste;
@@ -109,5 +110,15 @@ public class Atelier {
     public void setGeste(List<Geste> geste) {
         this.geste = geste;
     }
+
+
+    public Utilisateur getFormateur() {
+        return formateur;
+    }
+
+    public void setFormateur(Utilisateur formateur) {
+        this.formateur = formateur;
+    }
+
 
 }

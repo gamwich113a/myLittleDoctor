@@ -22,23 +22,19 @@ import java.util.List;
 import java.util.Map;
 
 import client.mylittledoctor.formation.arlebois.com.mylittledoctor.atelier.AtelierActivity;
+import client.mylittledoctor.formation.arlebois.com.mylittledoctor.technical.MyLittleDoctorActivity;
 import client.mylittledoctor.formation.arlebois.com.mylittledoctor.technical.MyLittleDoctorVolleyError;
 import client.mylittledoctor.formation.arlebois.com.mylittledoctor.technical.RequestSingleton;
 import client.mylittledoctor.formation.com.mylittledoctor.entite.Atelier;
 
-public class CentralActivity extends AppCompatActivity {
-
+public class CentralActivity extends MyLittleDoctorActivity {
 
     Spinner atelierSpinner;
-    //EditText resultat;
     TextView titre;
     TextView description;
     TextView lieu;
     List<Atelier> atelierList = new ArrayList<>();
     Map<Long, Atelier> atelierMap = new HashMap<>();
-    Long atelierId = 0L;
-    Long utilisateurId;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +43,7 @@ public class CentralActivity extends AppCompatActivity {
 
         // Get the Intent that started this activity and extract the string
         Intent intent = getIntent();
-        utilisateurId = intent.getLongExtra(MainActivity.UTILISATEUR_ID, -1);
+        getContext(intent);
 
         atelierSpinner = findViewById(R.id.atelierList);
         //resultat = findViewById(R.id.resultat);
@@ -83,7 +79,7 @@ public class CentralActivity extends AppCompatActivity {
     }
 
     private void loadSpinnerData() {
-        StringRequest atelierRequest = new StringRequest(Request.Method.POST, MainActivity.url + "/atelier/findAllActif", new Response.Listener<String>() {
+        StringRequest atelierRequest = new StringRequest(Request.Method.POST, url + "/atelier/findAllActif", new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 atelierList = Arrays.asList(new Gson().fromJson(response, Atelier[].class));
@@ -107,13 +103,10 @@ public class CentralActivity extends AppCompatActivity {
 
     public void selectAtelierAction(View view) {
 
-        StringRequest linkToAtelier = new StringRequest(Request.Method.POST, MainActivity.url + "/user/linkToAtelier", new Response.Listener<String>() {
+        StringRequest linkToAtelier = new StringRequest(Request.Method.POST, url + "/user/linkToAtelier", new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Intent intent = new Intent(CentralActivity.this, AtelierActivity.class);
-                intent.putExtra(MainActivity.UTILISATEUR_ID, utilisateurId);
-                intent.putExtra(MainActivity.ATELIER_ID, atelierId);
-                startActivity(intent);
+                configNextActivity(CentralActivity.this,AtelierActivity.class);
             }
         }, new Response.ErrorListener() {
             @Override

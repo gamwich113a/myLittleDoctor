@@ -22,12 +22,13 @@ import java.util.Map;
 
 import client.mylittledoctor.formation.arlebois.com.mylittledoctor.MainActivity;
 import client.mylittledoctor.formation.arlebois.com.mylittledoctor.R;
+import client.mylittledoctor.formation.arlebois.com.mylittledoctor.technical.MyLittleDoctorActivity;
 import client.mylittledoctor.formation.arlebois.com.mylittledoctor.technical.MyLittleDoctorVolleyError;
 import client.mylittledoctor.formation.arlebois.com.mylittledoctor.technical.RequestSingleton;
 import client.mylittledoctor.formation.com.mylittledoctor.entite.Utilisateur;
 
 
-public class UtilisateurCreateActivity extends AppCompatActivity {
+public class UtilisateurCreateActivity extends MyLittleDoctorActivity {
 
     Button createUtilisateur;
     EditText nom;
@@ -53,16 +54,15 @@ public class UtilisateurCreateActivity extends AppCompatActivity {
 
     private View.OnClickListener utilisateurListener = new View.OnClickListener() {
         public void onClick(View v) {
-            StringRequest getRequest = new StringRequest(Request.Method.POST, MainActivity.url + "/user/create",
+            StringRequest getRequest = new StringRequest(Request.Method.POST, url + "/user/create",
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
                             resultat.setText("Response" + response);
                             bean = new Gson().fromJson(response, Utilisateur.class);
-                            Intent intent = new Intent(UtilisateurCreateActivity.this, EvaluationGesteActivity.class);
-                            intent.putExtra(MainActivity.UTILISATEUR_ID, bean.getId());
-                            intent.putExtra(MainActivity.ROLE, bean.getRole());
-                            startActivity(intent);
+                            utilisateurId = bean.getId();
+                            role = bean.getRole();
+                            configNextActivity(UtilisateurCreateActivity.this, EvaluationGesteActivity.class);
                         }
                     },
                     new Response.ErrorListener() {
